@@ -24,6 +24,14 @@ Este proyecto utiliza `uv` para gestionar el entorno de Python. Si no tienes `uv
 uv sync --locked
 ```
 
+### Agregar el kernel de Jupyter
+
+Para que el entorno esté disponible como kernel en Jupyter, ejecuta:
+
+```bash
+uv run python -m ipykernel install --user --name 'pr_ciencia_datos' --display-name "Proyecto Ciencia de Datos"
+```
+
 ### Ejecutar el notebook
 
 1. Inicia Jupyter Notebook:
