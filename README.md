@@ -14,10 +14,14 @@ El proyecto está estructurado en 5 etapas principales:
 
 ## 🚀 Cómo usar este proyecto
 
-### Instalación de dependencias
+### Requisitos previos
+
+Este proyecto utiliza `uv` para gestionar el entorno de Python. Si no tienes `uv` instalado, puedes instalarlo siguiendo las instrucciones en [https://docs.astral.sh/uv/getting-started/installation/](https://docs.astral.sh/uv/getting-started/installation/).
+
+### Configuración del entorno
 
 ```bash
-pip install -r requirements.txt
+uv sync --locked
 ```
 
 ### Ejecutar el notebook
