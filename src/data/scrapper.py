@@ -12,7 +12,7 @@ from common import utils
 
 # %%
 MAX_MOVIES = 1000
-N_MOVIES = 20
+N_MOVIES = 1000
 
 # %%
 opts = FirefoxOptions()
