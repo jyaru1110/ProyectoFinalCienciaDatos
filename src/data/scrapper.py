@@ -11,7 +11,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from common import utils
 
 # %%
-MAX_MOVIES = 250
+MAX_MOVIES = 1000
 N_MOVIES = 20
 
 # %%
@@ -37,7 +37,7 @@ driver.get("https://www.imdb.com/search/title/?groups=top_1000&count=250&sort=us
 
 # %%
 # Le damos click 3 veces para mostrar las 1000 peliculas
-for i in range(0):
+for i in range(3):
     sleep(10)
     see_more_btn = WebDriverWait(driver, 10).until(
         expected_conditions.presence_of_element_located((By.CLASS_NAME, "ipc-see-more__button")),
@@ -135,16 +135,14 @@ data.update(
 
 
 # %%
-for url in data["url"]:
+for idx, url in enumerate(data["url"]):
+    if idx % 50 == 0 and idx == 0:
+        print(f"Descanso de 20 en {idx}")
+        sleep(10)
+
     url_sin_params = url.split("?", 1)[0]
 
     driver.get(url_sin_params)
-
-    sleep(2)
-    # %%
-    footer = driver.find_element(By.CLASS_NAME, "imdb-footer__copyright")
-    driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", footer)
-    sleep(5)
 
     # %%
     listas = driver.find_elements(By.CLASS_NAME, "ipc-chip-list")
@@ -167,8 +165,6 @@ for url in data["url"]:
 
     data["genres_ext"] += [generos_ext]
     data["comentarios_ia"] += [comentarios_ia]
-
-    # print(data["genres_ext"], data["comentarios_ia"])
 
     # %%
     items_lista = driver.find_elements(By.CLASS_NAME, "ipc-metadata-list__item")
@@ -195,14 +191,6 @@ for url in data["url"]:
     data["box_office"] += [box_office]
     data["aspect_ratio"] += [aspect_ratio]
 
-    # print(
-    #     data["aspect_ratio"],
-    #     "\n",
-    #     data["box_office"],
-    #     "\n",
-    #     data["release_date"],
-    # )
-
     # %%
     directores = []
     escritores = []
@@ -223,14 +211,6 @@ for url in data["url"]:
     data["writers"] += [escritores]
     data["stars"] += [estrellas]
 
-    # print(
-    #     data["director"],
-    #     "\n",
-    #     data["writers"],
-    #     "\n",
-    #     data["stars"],
-    # )
-
     # %%
     paises_origen = []
     listas_origen = driver.find_elements(By.CSS_SELECTOR, 'li[data-testid="title-details-origin"]')
@@ -244,8 +224,6 @@ for url in data["url"]:
 
         data["countries"] += [paises_origen]
 
-    # print(data["countries"])
-
     # %%
     idiomas = []
     listas_idiomas = driver.find_element(By.CSS_SELECTOR, 'li[data-testid="title-details-languages"]')
@@ -254,8 +232,6 @@ for url in data["url"]:
     idiomas = [idioma.text for idioma in languages]
 
     data["languages"] += [idiomas]
-
-    # print(data["languages"])
 
     # %%
     companias = []
@@ -266,14 +242,13 @@ for url in data["url"]:
 
     data["production_companies"] += [companias]
 
-    # print(data["production_companies"])
     # %%
     generos = []
 
     storyline_element = driver.find_element(By.ID, "storyline")
     driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", storyline_element)
     driver.execute_script("arguments[0].click();", storyline_element)
-    sleep(10)
+    sleep(2)
 
     try:
         lista_generos = driver.find_element(By.CSS_SELECTOR, 'li[data-testid="storyline-genres"]')
@@ -285,8 +260,6 @@ for url in data["url"]:
         print(f"Sin generos para {url}.")
         data["genres"] += [[]]
 
-    # print(data["genres"])
-
     # %%
     ai_summary = ""
     try:
@@ -296,8 +269,6 @@ for url in data["url"]:
         ai_summary = ""
 
     data["ai_summary"] += [ai_summary]
-
-    # print(data["ai_summary"])
 
     # %%
     storyline = ""
@@ -309,8 +280,6 @@ for url in data["url"]:
 
     data["storyline"] += [storyline]
 
-    # print(data["storyline"])
-
     # %%
     cast = []
     try:
@@ -320,8 +289,6 @@ for url in data["url"]:
         cast = []
 
     data["cast"] += [cast]
-
-    # print(data["cast"])
 
     # %%
     awards_and_nominations = ""
@@ -334,10 +301,9 @@ for url in data["url"]:
 
     data["awards_and_nominations"] += [awards_and_nominations]
 
-    # print(data["awards_and_nominations"])
     print(url)
 
 # %%
 stage1_df = pd.DataFrame(data)
 print(stage1_df.shape)
-stage1_df.to_parquet(utils.find_project_root() / "data" / "raw" / "stage1_2.parquet")
+stage1_df.to_parquet(utils.find_project_root() / "data" / "raw" / "stage1.parquet")
