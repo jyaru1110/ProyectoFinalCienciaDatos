@@ -25,11 +25,14 @@ opts.add_argument("--no-sandbox")
 opts.add_argument("--disable-dev-shm-usage")
 opts.set_preference("dom.webdriver.enabled", value=False)
 opts.set_preference("useAutomationExtension", value=False)
+opts.set_preference("browser.cache.disk.enable", value=True)
+opts.set_preference("browser.cache.disk.capacity", 102400)
+# opts.set_preference("browser.cache.disk.parent_directory", "/tmp/")
 opts.add_argument("--")
+
 
 # %%
 driver = Firefox(options=opts)
-
 
 # %%
 # Stage 0 - Fetch de la lista completa de películas y algunos valores incluidos en ella
@@ -38,7 +41,7 @@ driver.get("https://www.imdb.com/search/title/?groups=top_1000&count=250&sort=us
 # %%
 # Le damos click 3 veces para mostrar las 1000 peliculas
 for i in range(3):
-    sleep(10)
+    sleep(5)
     see_more_btn = WebDriverWait(driver, 10).until(
         expected_conditions.presence_of_element_located((By.CLASS_NAME, "ipc-see-more__button")),
     )
@@ -54,7 +57,7 @@ for i in range(3):
     print(f"Done {i}")
 
 # %%
-sleep(10)
+sleep(5)
 elements = driver.find_elements(By.CLASS_NAME, "ipc-metadata-list-summary-item")
 assert len(elements) == MAX_MOVIES, f"Expected {MAX_MOVIES} movies but found {len(elements)}"
 
@@ -136,8 +139,8 @@ data.update(
 
 # %%
 for idx, url in enumerate(data["url"]):
-    if idx % 50 == 0 and idx == 0:
-        print(f"Descanso de 20 en {idx}")
+    if idx % 50 == 0 and idx != 0:
+        print(f"Descanso de 50 en {idx}")
         sleep(10)
 
     url_sin_params = url.split("?", 1)[0]
