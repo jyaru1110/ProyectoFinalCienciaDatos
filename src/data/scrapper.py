@@ -307,3 +307,7 @@ for idx, url in enumerate(data["url"]):
 stage1_df = pd.DataFrame(data)
 print(stage1_df.shape)
 stage1_df.to_parquet(utils.find_project_root() / "data" / "raw" / "stage1.parquet")
+
+
+# %%
+driver.quit()
